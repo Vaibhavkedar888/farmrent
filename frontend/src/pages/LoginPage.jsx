@@ -24,7 +24,15 @@ const LoginPage = () => {
             else if (user.role === 'ADMIN') navigate('/admin/dashboard');
             else navigate('/dashboard');
         } catch (err) {
-            setError(err.response?.data?.error || 'Invalid credentials. Please try again.');
+            if (!err.response) {
+                setError('Network error: Unable to reach the server. Please check the backend status and URLs.');
+            } else if (err.response.status === 401) {
+                setError('Invalid credentials. Please try again.');
+            } else if (err.response.status === 403) {
+                setError('Your account has been blocked. Please contact support.');
+            } else {
+                setError(err.response.data?.error || 'An unexpected error occurred. Please try again.');
+            }
         } finally {
             setLoading(false);
         }
