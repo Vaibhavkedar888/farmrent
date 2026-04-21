@@ -8,4 +8,6 @@ const api = axios.create({
     },
 });
 
+console.log("DEBUG: Connecting to Backend at:", api.defaults.baseURL);
+
 export default api;
