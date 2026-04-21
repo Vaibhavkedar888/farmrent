@@ -3,9 +3,10 @@ services:
   - type: web
     name: agrorent-backend
     env: docker
+    dockerContext: .
+    dockerfilePath: ./Dockerfile
     plan: free
     region: ohio
-    # No buildCommand or startCommand needed when using Docker
     healthCheckPath: /api/auth/health
     envVars:
       - key: JAVA_VERSION
