@@ -74,39 +74,40 @@ public class SecurityConfig {
     private String allowedOrigins;
 
     /**
-     * CORS configuration
+     * Dynamic CORS configuration
+     * Automatically allows any .onrender.com subdomain and localhost
      */
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
-        CorsConfiguration configuration = new CorsConfiguration();
-        
-        // Split allowed origins and clean up trailing slashes
-        java.util.List<String> origins = Arrays.stream(allowedOrigins.split(","))
-                .map(String::trim)
-                .map(o -> o.endsWith("/") ? o.substring(0, o.length() - 1) : o)
-                .collect(java.util.stream.Collectors.toList());
-        
-        configuration.setAllowedOrigins(origins);
-        // Also allow common patterns for development and Render subdomains
-        configuration.setAllowedOriginPatterns(Arrays.asList(
-            "http://localhost:[*]",
-            "https://*.onrender.com",
-            "https://farmrent-1-5imi.onrender.com",
-            "https://farmrent-5ypd.onrender.com"
-        ));
-        
-        configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS", "HEAD"));
-        configuration.setAllowedHeaders(Arrays.asList(
-            "Origin", "Content-Type", "Accept", "Authorization", 
-            "X-Requested-With", "X-Auth-Token", "Access-Control-Allow-Credentials"
-        ));
-        configuration.setExposedHeaders(Arrays.asList("Set-Cookie", "X-Auth-Token"));
-        configuration.setAllowCredentials(true);
-        configuration.setMaxAge(3600L);
-        
-        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-        source.registerCorsConfiguration("/**", configuration);
-        return source;
+        return request -> {
+            String origin = request.getHeader("Origin");
+            CorsConfiguration config = new CorsConfiguration();
+            
+            // Log for debugging (shows up in Render logs)
+            // System.out.println("Processing CORS for Origin: " + origin);
+
+            if (origin != null && (
+                origin.endsWith(".onrender.com") || 
+                origin.startsWith("http://localhost") || 
+                origin.startsWith("http://127.0.0.1"))) {
+                config.setAllowedOrigins(Arrays.asList(origin));
+            } else {
+                // Fallback to configured origins if no match
+                config.setAllowedOrigins(Arrays.stream(allowedOrigins.split(","))
+                        .map(String::trim)
+                        .collect(java.util.stream.Collectors.toList()));
+            }
+
+            config.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS", "HEAD"));
+            config.setAllowedHeaders(Arrays.asList(
+                "Origin", "Content-Type", "Accept", "Authorization", 
+                "X-Requested-With", "X-Auth-Token", "Access-Control-Allow-Credentials"
+            ));
+            config.setExposedHeaders(Arrays.asList("Set-Cookie", "X-Auth-Token"));
+            config.setAllowCredentials(true);
+            config.setMaxAge(3600L);
+            return config;
+        };
     }
 
     /**
