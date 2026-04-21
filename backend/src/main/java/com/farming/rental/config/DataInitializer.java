@@ -12,7 +12,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.util.List;
 
-@Configuration
+@org.springframework.stereotype.Component
 @RequiredArgsConstructor
 @Slf4j
 public class DataInitializer implements CommandLineRunner {
