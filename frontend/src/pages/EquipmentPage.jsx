@@ -152,7 +152,7 @@ const EquipmentPage = () => {
                                 <div className="h-48 bg-gray-200 relative">
                                     {/* Placeholder image if none */}
                                     {item.imageUrl ? (
-                                        <img src={`http://localhost:8080${item.imageUrl}`} alt={item.name} className="w-full h-full object-cover" />
+                                        <img src={`${import.meta.env.VITE_API_BASE_URL || 'http://localhost:8080'}${item.imageUrl}`} alt={item.name} className="w-full h-full object-cover" />
                                     ) : (
                                         <div className="w-full h-full flex items-center justify-center text-gray-400">
                                             <Tractor size={48} />

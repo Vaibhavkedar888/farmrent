@@ -50,7 +50,7 @@ const EditEquipmentPage = () => {
                     image: null
                 });
                 if (data.imageUrl) {
-                    setImagePreview(`http://localhost:8080${data.imageUrl}`);
+                    setImagePreview(`${import.meta.env.VITE_API_BASE_URL || 'http://localhost:8080'}${data.imageUrl}`);
                 }
             } catch (err) {
                 setError('Failed to fetch equipment details');
@@ -258,7 +258,11 @@ const EditEquipmentPage = () => {
                                 <div className="mt-1 flex justify-center px-6 pt-6 pb-6 border-2 border-gray-200 border-dashed rounded-3xl hover:border-primary-500 transition cursor-pointer relative bg-gray-50/50 group">
                                     <div className="space-y-4 text-center">
                                         {imagePreview ? (
-                                            <img src={imagePreview} className="mx-auto h-48 object-cover rounded-2xl shadow-md" alt="Preview" />
+                                            <img 
+                                                src={imagePreview.startsWith('blob:') ? imagePreview : `${import.meta.env.VITE_API_BASE_URL || 'http://localhost:8080'}${imagePreview.startsWith('http') ? new URL(imagePreview).pathname : imagePreview}`} 
+                                                className="mx-auto h-48 object-cover rounded-2xl shadow-md" 
+                                                alt="Preview" 
+                                            />
                                         ) : (
                                             <Upload className="mx-auto h-12 w-12 text-gray-400" />
                                         )}
