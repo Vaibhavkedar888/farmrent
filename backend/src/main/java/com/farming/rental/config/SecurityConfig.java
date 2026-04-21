@@ -31,12 +31,13 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
-            .cors(cors -> cors.configurationSource(corsConfigurationSource()))
+            .cors(cors -> cors.disable()) // Handled by CorsFilter bean at higher priority
             .csrf(csrf -> csrf.disable())
             .authorizeHttpRequests(authz -> authz
+                .requestMatchers(org.springframework.http.HttpMethod.OPTIONS, "/**").permitAll()
                 .requestMatchers("/", "/login", "/register", 
                                 "/static/**", "/css/**", "/js/**", "/images/**", "/h2-console/**",
-                                "/api/auth/**", "/api/public/**").permitAll()
+                                "/api/auth/**", "/api/public/**", "/api/auth/health").permitAll()
                 .requestMatchers("/api/farmer/**").hasAnyAuthority("ROLE_FARMER")
                 .requestMatchers("/api/owner/**").hasAnyAuthority("ROLE_OWNER")
                 .requestMatchers("/api/admin/**").hasAnyAuthority("ROLE_ADMIN")
