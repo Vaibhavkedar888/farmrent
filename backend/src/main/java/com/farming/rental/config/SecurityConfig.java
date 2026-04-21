@@ -31,7 +31,7 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
-            .cors(cors -> cors.disable()) // Handled by CorsFilter bean at higher priority
+            .cors(cors -> cors.configurationSource(corsConfigurationSource()))
             .csrf(csrf -> csrf.disable())
             .authorizeHttpRequests(authz -> authz
                 .requestMatchers(org.springframework.http.HttpMethod.OPTIONS, "/**").permitAll()
@@ -90,11 +90,17 @@ public class SecurityConfig {
         // Also allow common patterns for development and Render subdomains
         configuration.setAllowedOriginPatterns(Arrays.asList(
             "http://localhost:[*]",
-            "https://*.onrender.com"
+            "https://*.onrender.com",
+            "https://farmrent-1-5imi.onrender.com",
+            "https://farmrent-5ypd.onrender.com"
         ));
         
         configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS", "HEAD"));
-        configuration.setAllowedHeaders(Arrays.asList("Origin", "Content-Type", "Accept", "Authorization", "X-Requested-With"));
+        configuration.setAllowedHeaders(Arrays.asList(
+            "Origin", "Content-Type", "Accept", "Authorization", 
+            "X-Requested-With", "X-Auth-Token", "Access-Control-Allow-Credentials"
+        ));
+        configuration.setExposedHeaders(Arrays.asList("Set-Cookie", "X-Auth-Token"));
         configuration.setAllowCredentials(true);
         configuration.setMaxAge(3600L);
         
