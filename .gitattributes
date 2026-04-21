@@ -1,0 +1,6 @@
+# Force LF for shell scripts
+backend/mvnw text eol=lf
+**/*.sh text eol=lf
+
+# Default behavior for other files
+* text=auto
