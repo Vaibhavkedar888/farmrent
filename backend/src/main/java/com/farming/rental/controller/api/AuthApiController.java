@@ -27,6 +27,11 @@ public class AuthApiController {
 
     private final UserService userService;
     private final PasswordEncoder passwordEncoder;
+    
+    @GetMapping("/health")
+    public ResponseEntity<String> healthCheck() {
+        return ResponseEntity.ok("OK");
+    }
 
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestParam String email, 
