@@ -6,15 +6,15 @@ FROM maven:3.9-eclipse-temurin-17 AS build
 WORKDIR /app
 
 # Copy Maven wrapper and pom files first (caches dependencies)
-COPY mvnw .
-COPY .mvn .mvn
-COPY pom.xml .
+COPY backend/mvnw .
+COPY backend/.mvn .mvn
+COPY backend/pom.xml .
 
 # Download dependencies (will be cached unless pom.xml changes)
 RUN ./mvnw dependency:go-offline -B
 
 # Copy the full source tree and build the JAR (skip tests for speed)
-COPY src ./src
+COPY backend/src ./src
 RUN ./mvnw clean package -DskipTests -B
 
 # -------------------------------------------------

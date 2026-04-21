@@ -3,7 +3,7 @@ services:
   - type: web
     name: agrorent-backend
     env: docker
-    dockerContext: backend
+    dockerContext: .
     dockerfilePath: backend/Dockerfile
     envVars:
       - key: MONGODB_URI
