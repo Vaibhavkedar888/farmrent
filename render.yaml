@@ -2,12 +2,10 @@ services:
   # Backend Web Service (Spring Boot)
   - type: web
     name: agrorent-backend
-    env: java
+    env: docker
     plan: free
-    region: ohio # Change if needed, but Ohio usually has free tier availability
-    buildCommand: "chmod +x mvnw && ./mvnw clean install -DskipTests"
-    startCommand: "java -jar target/*.jar"
-    rootDir: backend
+    region: ohio
+    # No buildCommand or startCommand needed when using Docker
     healthCheckPath: /api/auth/health
     envVars:
       - key: JAVA_VERSION
