@@ -27,9 +27,7 @@ export const AuthProvider = ({ children }) => {
     };
 
     const login = async (email, password) => {
-        const response = await api.post('/api/auth/login', null, {
-            params: { email, password }
-        });
+        const response = await api.post('/api/auth/login', { email, password });
         const user = response.data;
         // The backend redirects, but for REST API we want JSON.
         // We need to refactor backend to return JSON for API calls.

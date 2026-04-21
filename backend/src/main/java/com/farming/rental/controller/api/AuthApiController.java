@@ -34,11 +34,12 @@ public class AuthApiController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<?> login(@RequestParam String email, 
-                                 @RequestParam String password,
+    public ResponseEntity<?> login(@RequestBody com.farming.rental.dto.LoginRequest loginRequest,
                                  HttpSession session,
                                  HttpServletRequest request,
                                  HttpServletResponse response) {
+        String email = loginRequest.getEmail();
+        String password = loginRequest.getPassword();
         log.info("API Login request for: {}", email);
         try {
             Optional<User> userOptional = userService.getUserByEmail(email);
