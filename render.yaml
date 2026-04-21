@@ -5,11 +5,13 @@ services:
     env: java
     plan: free
     region: ohio # Change if needed, but Ohio usually has free tier availability
-    buildCommand: "sh mvnw clean install -DskipTests"
+    buildCommand: "chmod +x mvnw && ./mvnw clean install -DskipTests"
     startCommand: "java -jar target/*.jar"
     rootDir: backend
-    healthCheckPath: /api/auth/health # Change if you have a health endpoint
+    healthCheckPath: /api/auth/health
     envVars:
+      - key: JAVA_VERSION
+        value: "17"
       - key: MONGODB_URI
         sync: false # Set this in Render dashboard (e.g., mongodb+srv://...)
       - key: ALLOWED_ORIGINS
